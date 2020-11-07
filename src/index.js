@@ -21,26 +21,24 @@ class Board extends React.Component {
         />
       );
     }
-  
-    render() {        
+
+    renderRow(i) {
+        const elements = [0, 1, 2].map((index) => {
+            return this.renderSquare(i*3 + index)
+        })
+
         return (
-            <div>
-                <div className="board-row">
-                    {this.renderSquare(0)}
-                    {this.renderSquare(1)}
-                    {this.renderSquare(2)}
-                </div>
-                <div className="board-row">
-                    {this.renderSquare(3)}
-                    {this.renderSquare(4)}
-                    {this.renderSquare(5)}
-                </div>
-                <div className="board-row">
-                    {this.renderSquare(6)}
-                    {this.renderSquare(7)}
-                    {this.renderSquare(8)}
-                </div>
-            </div>
+            <div className="board-row">{elements}</div>
+        )
+    }
+  
+    render() {     
+        const rows = [0, 1, 2].map((index) => {
+            return this.renderRow(index)
+        })
+        
+        return (
+            <div>{rows}</div>
         );
     }
 }
@@ -93,7 +91,7 @@ class Game extends React.Component {
                 'Go to game start';
             return (
                 <li key = {move}>
-                    <button onClick = {() => this.jumpTo(move)}>
+                    <button onClick = {() => {this.jumpTo(move)}}>
                         {desc}
                     </button>
                 </li>
@@ -103,7 +101,9 @@ class Game extends React.Component {
         let status;
         if (winner){
             status = 'Winner: ' + winner;
-        } else {
+        } else if (this.state.stepNumber === 9) {
+            status = "It's a tie"
+        }else {
             status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
         }
 
@@ -132,6 +132,7 @@ ReactDOM.render(
 );
   
 function calculateWinner(squares) {
+    // return null;
     const lines = [
       [0, 1, 2],
       [3, 4, 5],
